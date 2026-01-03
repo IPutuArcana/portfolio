@@ -1,0 +1,98 @@
+/* General Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Requirement: Warna background khusus header  */
+header#main-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.profile-img-container img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+}
+
+/* Biodata Table Styling */
+.biodata-card {
+    padding: 20px;
+}
+
+/* Requirement: CSS Class/ID styling [cite: 238] */
+#biodata-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#biodata-table th, #biodata-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#biodata-table th {
+    color: #764ba2;
+    width: 35%;
+}
+
+/* Contact & Buttons */
+.contact-section, .actions {
+    padding: 20px;
+    text-align: center;
+}
+
+.btn, .action-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.github { background-color: #333; color: white; }
+.instagram { background-color: #E1306C; color: white; }
+.action-btn { background-color: #667eea; color: white; }
+
+/* Requirement: Efek hover  */
+.btn:hover, .action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    opacity: 0.9;
+}
+
+/* Dark Theme Class (Activated by JS) */
+body.dark-mode {
+    background-color: #1a1a2e;
+}
+body.dark-mode .container {
+    background-color: #16213e;
+    color: #e0e0e0;
+}
+body.dark-mode #biodata-table th {
+    color: #4db5ff;
+}
