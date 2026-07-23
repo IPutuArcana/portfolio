@@ -1,0 +1,100 @@
+---
+import type { ProjectEntry } from '../data/content';
+
+interface Props {
+  project: ProjectEntry;
+  enProject: ProjectEntry;
+  linkLabel: string;
+  enLinkLabel: string;
+  featured?: boolean;
+}
+
+const { project, enProject, linkLabel, enLinkLabel, featured = false } = Astro.props;
+---
+
+<article class:list={['project-card panel reveal', { featured }]} data-searchable>
+  <div class="project-tags">
+    {project.tags.map((tag, i) => (
+      <span data-i18n-id={project.tags[i]} data-i18n-en={enProject.tags[i]}>{tag}</span>
+    ))}
+  </div>
+  <h3 data-i18n-id={project.title} data-i18n-en={enProject.title}>{project.title}</h3>
+  <p data-i18n-id={project.description} data-i18n-en={enProject.description}>{project.description}</p>
+  <a href={project.href} target="_blank" rel="noopener noreferrer" class="project-link">
+    <span data-i18n-id={linkLabel} data-i18n-en={enLinkLabel}>{linkLabel}</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M7 17 17 7M7 7h10v10"></path>
+    </svg>
+  </a>
+</article>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+    transition: border-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-3px);
+  }
+
+  .project-card.featured {
+    grid-column: span 2;
+  }
+
+  .project-tags {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .project-tags span {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border: var(--rule-width) solid var(--color-border);
+    padding: 0.15rem 0.5rem;
+  }
+
+  .project-card h3 {
+    font-size: var(--text-h3);
+  }
+
+  .project-card p {
+    color: var(--color-text-muted);
+    flex-grow: 1;
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-accent);
+    margin-top: var(--space-sm);
+  }
+
+  .project-link svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .project-link:hover svg {
+    transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 800px) {
+    .project-card.featured {
+      grid-column: span 1;
+    }
+  }
+</style>

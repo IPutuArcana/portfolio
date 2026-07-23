@@ -1,0 +1,113 @@
+---
+import { content, type Lang } from '../data/content';
+import CloudMotif from './motifs/CloudMotif.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang];
+const en = content.en;
+const id = content.id;
+---
+
+<section class="section wrap" id="skills">
+  <CloudMotif class="skills-cloud" width={200} tone="accent" />
+  <div class="skills-head panel reveal">
+    <span class="eyebrow" data-i18n-id={id.skills.eyebrow} data-i18n-en={en.skills.eyebrow}>{t.skills.eyebrow}</span>
+    <h2 data-i18n-id={id.skills.heading} data-i18n-en={en.skills.heading}>{t.skills.heading}</h2>
+    <p class="note" data-i18n-id={id.skills.note} data-i18n-en={en.skills.note}>{t.skills.note}</p>
+  </div>
+
+  <div class="skills-grid">
+    {t.skills.groups.map((group, gi) => (
+      <div class="skill-group panel reveal">
+        <h3 data-i18n-id={id.skills.groups[gi].label} data-i18n-en={en.skills.groups[gi].label}>{group.label}</h3>
+        <ul>
+          {group.items.map((item, ii) => (
+            <li
+              style={`--i: ${ii}`}
+              data-i18n-id={id.skills.groups[gi].items[ii]}
+              data-i18n-en={en.skills.groups[gi].items[ii]}
+            >{item}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  #skills {
+    position: relative;
+  }
+
+  .skills-cloud {
+    top: 0;
+    left: -3rem;
+    z-index: 0;
+  }
+
+  .skills-head {
+    position: relative;
+    z-index: 1;
+    padding: var(--space-lg);
+  }
+
+  .skills-head h2 {
+    font-size: var(--text-h2);
+    margin-block: var(--space-xs) var(--space-sm);
+  }
+
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  .skills-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+  }
+
+  .skill-group {
+    padding: var(--space-md);
+  }
+
+  .skill-group h3 {
+    font-size: var(--text-base);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-md);
+  }
+
+  .skill-group ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .skill-group li {
+    font-size: var(--text-lg);
+    font-family: var(--font-display);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+
+  .skill-group[data-revealed='false'] li {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  @media (max-width: 800px) {
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

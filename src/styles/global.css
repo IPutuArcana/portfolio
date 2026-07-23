@@ -1,0 +1,226 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+.section,
+.hero {
+  scroll-margin-top: 6rem;
+}
+
+body {
+  margin: 0;
+  background: var(--backdrop-base);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  transition: background-color var(--duration-slow) var(--ease-out-expo),
+    color var(--duration-slow) var(--ease-out-expo);
+}
+
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -3rem;
+  left: var(--space-md);
+  z-index: 100;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: 2px;
+  transition: top var(--duration-fast) var(--ease-out-expo);
+}
+
+.skip-link:focus {
+  top: var(--space-md);
+}
+
+.wrap {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+
+.section {
+  padding-block: var(--space-section);
+  border-top: var(--rule-width) solid var(--color-border);
+}
+
+.section:first-of-type {
+  border-top: none;
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.panel {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  border: var(--rule-width) solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  color: var(--color-text);
+  /* Slow, visible colour crossfade when switching light/dark theme. Interactive
+     panels (cards, header) redefine their own transition, so their hover stays
+     snappy while these static panels fade gently on a theme change. */
+  transition: background-color var(--duration-slow) var(--ease-out-expo),
+    border-color var(--duration-slow) var(--ease-out-expo),
+    box-shadow var(--duration-slow) var(--ease-out-expo);
+}
+
+/* Tactile press feedback — everything clickable dips slightly when pressed. */
+.btn:active,
+.theme-toggle:active,
+.lang-toggle:active,
+.rail-btn:active,
+.project-card:active,
+.post-card:active,
+.back-to-top-fab:active,
+.social-links a:active {
+  transform: scale(0.96);
+}
+
+/* Language change: a soft blur-fade over the page content so the text swap
+   reads as a deliberate transition rather than an instant flip. */
+body.lang-changing main {
+  animation: lang-fade var(--duration-slow) var(--ease-out-expo);
+}
+
+@keyframes lang-fade {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  45% {
+    opacity: 0.45;
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.reveal {
+  transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo),
+    filter 1s var(--ease-out-expo);
+}
+
+.reveal[data-revealed='false'] {
+  opacity: 0;
+  transform: translateY(32px);
+  filter: blur(8px);
+}
+
+/* Stagger paired sections so panels arrive one after another, not all at once. */
+.about-grid > .reveal:nth-child(2),
+.contact-grid > .reveal:nth-child(2) {
+  transition-delay: 140ms;
+}
+
+.projects-grid > .reveal:nth-child(2),
+.skills-grid > .reveal:nth-child(2),
+.blog-grid > .reveal:nth-child(2) {
+  transition-delay: 140ms;
+}
+
+.projects-grid > .reveal:nth-child(3),
+.skills-grid > .reveal:nth-child(3),
+.blog-grid > .reveal:nth-child(3) {
+  transition-delay: 280ms;
+}
+
+.blog-grid > .reveal:nth-child(4) {
+  transition-delay: 420ms;
+}
+
+.blog-grid > .reveal:nth-child(5) {
+  transition-delay: 560ms;
+}
+
+.blog-grid > .reveal:nth-child(6) {
+  transition-delay: 700ms;
+}
+
+.motif {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

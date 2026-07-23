@@ -1,0 +1,83 @@
+<div class="backdrop" aria-hidden="true">
+  <span class="blob blob-a"></span>
+  <span class="blob blob-b"></span>
+  <span class="blob blob-c"></span>
+</div>
+
+<style>
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: var(--backdrop-base);
+    pointer-events: none;
+    transition: background-color var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    transition: background-color var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .blob-a {
+    top: -10%;
+    left: -8%;
+    width: max(42rem, 40vw);
+    height: max(42rem, 40vw);
+    background: var(--color-accent);
+    animation: blob-in 1.3s var(--ease-out-expo) both,
+      drift-a 16s ease-in-out infinite 1.3s;
+  }
+
+  .blob-b {
+    bottom: -15%;
+    right: -10%;
+    width: max(46rem, 46vw);
+    height: max(46rem, 46vw);
+    background: var(--color-accent-secondary);
+    animation: blob-in 1.3s var(--ease-out-expo) 150ms both,
+      drift-b 20s ease-in-out infinite 1.45s;
+  }
+
+  .blob-c {
+    top: 30%;
+    right: 15%;
+    width: max(30rem, 32vw);
+    height: max(30rem, 32vw);
+    background: var(--backdrop-blob-tertiary);
+    animation: blob-in 1.3s var(--ease-out-expo) 300ms both,
+      drift-c 13s ease-in-out infinite 1.6s;
+  }
+
+  @keyframes blob-in {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+      filter: blur(140px);
+    }
+    to {
+      opacity: var(--backdrop-blob-opacity);
+      transform: scale(1);
+      filter: blur(90px);
+    }
+  }
+
+  @keyframes drift-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(9%, 12%) scale(1.15); }
+  }
+
+  @keyframes drift-b {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-10%, -8%) scale(1.12); }
+  }
+
+  @keyframes drift-c {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-12%, 10%) scale(0.88); }
+  }
+
+</style>

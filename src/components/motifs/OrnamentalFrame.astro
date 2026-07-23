@@ -1,0 +1,63 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<span class:list={['ornamental-frame', className]} aria-hidden="true">
+  <svg class="corner corner-tl" viewBox="0 0 40 40" fill="none">
+    <path d="M2 20V6a4 4 0 0 1 4-4h14" stroke="var(--color-accent)" stroke-width="1.5" />
+    <circle cx="2" cy="20" r="1.5" fill="var(--color-accent)" />
+  </svg>
+  <svg class="corner corner-tr" viewBox="0 0 40 40" fill="none">
+    <path d="M38 20V6a4 4 0 0 0-4-4H20" stroke="var(--color-accent)" stroke-width="1.5" />
+    <circle cx="38" cy="20" r="1.5" fill="var(--color-accent)" />
+  </svg>
+  <svg class="corner corner-bl" viewBox="0 0 40 40" fill="none">
+    <path d="M2 20v14a4 4 0 0 0 4 4h14" stroke="var(--color-accent)" stroke-width="1.5" />
+    <circle cx="2" cy="20" r="1.5" fill="var(--color-accent)" />
+  </svg>
+  <svg class="corner corner-br" viewBox="0 0 40 40" fill="none">
+    <path d="M38 20v14a4 4 0 0 1-4 4H20" stroke="var(--color-accent)" stroke-width="1.5" />
+    <circle cx="38" cy="20" r="1.5" fill="var(--color-accent)" />
+  </svg>
+</span>
+
+<style>
+  .ornamental-frame {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .corner {
+    position: absolute;
+    width: 2.25rem;
+    height: 2.25rem;
+    opacity: 0.7;
+    filter: drop-shadow(var(--glow-accent));
+  }
+
+  .corner-tl {
+    top: 0;
+    left: 0;
+  }
+
+  .corner-tr {
+    top: 0;
+    right: 0;
+  }
+
+  .corner-bl {
+    bottom: 0;
+    left: 0;
+  }
+
+  .corner-br {
+    bottom: 0;
+    right: 0;
+  }
+</style>

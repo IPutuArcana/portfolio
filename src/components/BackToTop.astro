@@ -1,0 +1,90 @@
+---
+import { content } from '../data/content';
+
+const id = content.id;
+const en = content.en;
+---
+
+<button
+  type="button"
+  id="back-to-top"
+  class="back-to-top-fab"
+  aria-label={id.footer.backToTop}
+  aria-hidden="true"
+  tabindex="-1"
+  data-i18n-attr="aria-label"
+  data-i18n-id={id.footer.backToTop}
+  data-i18n-en={en.footer.backToTop}
+>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"></path>
+  </svg>
+</button>
+
+<style>
+  .back-to-top-fab {
+    position: fixed;
+    right: var(--space-md);
+    bottom: var(--space-md);
+    z-index: 30;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    box-shadow: var(--glass-shadow);
+    opacity: 0;
+    transform: translateY(1rem) scale(0.85);
+    pointer-events: none;
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .back-to-top-fab.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .back-to-top-fab:hover,
+  .back-to-top-fab:focus-visible {
+    transform: translateY(-3px) scale(1.05);
+  }
+
+  .back-to-top-fab svg {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  @media (max-width: 700px) {
+    .back-to-top-fab {
+      right: var(--space-sm);
+      bottom: var(--space-sm);
+    }
+  }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('#back-to-top');
+
+  if (button) {
+    const toggleVisibility = () => {
+      const visible = window.scrollY > window.innerHeight * 0.6;
+      button.classList.toggle('is-visible', visible);
+      button.setAttribute('aria-hidden', String(!visible));
+      button.tabIndex = visible ? 0 : -1;
+    };
+
+    toggleVisibility();
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
+
+    button.addEventListener('click', () => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+    });
+  }
+</script>

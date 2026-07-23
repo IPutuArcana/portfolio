@@ -1,0 +1,53 @@
+---
+import { content, type Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang];
+const en = content.en;
+const id = content.id;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer panel">
+  <div class="wrap footer-inner">
+    <p class="rights">
+      &copy; {year} {t.hero.name} — <span data-i18n-id={id.footer.rights} data-i18n-en={en.footer.rights}>{t.footer.rights}</span>
+    </p>
+    <a href="#main" class="back-to-top" data-i18n-id={id.footer.backToTop} data-i18n-en={en.footer.backToTop}>
+      {t.footer.backToTop}
+    </a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    z-index: 1;
+    border-radius: 0;
+    margin: var(--space-md);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    padding-block: var(--space-lg);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .back-to-top {
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 4px;
+  }
+
+  .back-to-top:hover {
+    text-decoration-color: var(--color-accent);
+  }
+</style>

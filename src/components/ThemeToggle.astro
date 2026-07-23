@@ -1,0 +1,123 @@
+---
+import type { SiteContent } from '../data/content';
+
+interface Props {
+  t: SiteContent;
+  en: SiteContent;
+}
+
+const { t, en } = Astro.props;
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  data-label-to-dark-id={t.themeToggle.toDark}
+  data-label-to-dark-en={en.themeToggle.toDark}
+  data-label-to-light-id={t.themeToggle.toLight}
+  data-label-to-light-en={en.themeToggle.toLight}
+  aria-label={t.themeToggle.toDark}
+>
+  <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+  </svg>
+  <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: var(--rule-width) solid var(--color-border);
+    border-radius: 50%;
+    transition: border-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+
+  .icon {
+    position: absolute;
+    width: 1.1rem;
+    height: 1.1rem;
+    opacity: 0;
+    transform: scale(0.5) rotate(-90deg);
+    filter: blur(3px);
+    transition: opacity var(--duration-slow) var(--ease-out-expo),
+      transform var(--duration-slow) var(--ease-out-expo),
+      filter var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .icon-moon {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+
+  :global([data-theme='dark']) .icon-sun {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+
+  :global([data-theme='dark']) .icon-moon {
+    opacity: 0;
+    transform: scale(0.5) rotate(90deg);
+    filter: blur(3px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .icon-sun {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+      filter: blur(0);
+    }
+
+    :global(:root:not([data-theme='light'])) .icon-moon {
+      opacity: 0;
+      transform: scale(0.5) rotate(90deg);
+      filter: blur(3px);
+    }
+  }
+</style>
+
+<script>
+  import { resolvedTheme } from '../scripts/i18n';
+
+  // Delegate on document so the handler survives Astro ClientRouter
+  // navigations — per-element listeners would be lost after a page swap.
+  function syncLabel() {
+    const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+    if (!button) return;
+    const isDark = resolvedTheme() === 'dark';
+    const lang = document.documentElement.getAttribute('lang') === 'en' ? 'En' : 'Id';
+    const key = `labelTo${isDark ? 'Light' : 'Dark'}${lang}` as keyof DOMStringMap;
+    const label = button.dataset[key];
+    if (label) button.setAttribute('aria-label', label);
+  }
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element) || !target.closest('[data-theme-toggle]')) return;
+    const next = resolvedTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try {
+      localStorage.setItem('theme', next);
+    } catch (e) {}
+    syncLabel();
+  });
+
+  document.addEventListener('astro:page-load', syncLabel);
+  syncLabel();
+</script>

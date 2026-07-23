@@ -1,0 +1,188 @@
+---
+import { content, type Lang } from '../data/content';
+import CloudMotif from './motifs/CloudMotif.astro';
+import StatStrip from './StatStrip.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang];
+const en = content.en;
+const id = content.id;
+---
+
+<section class="hero wrap" id="main">
+  <CloudMotif class="hero-cloud" width={280} />
+
+  <div class="hero-panel panel reveal">
+    <div class="hero-copy">
+      <span class="eyebrow reveal" data-i18n-id={id.hero.eyebrow} data-i18n-en={en.hero.eyebrow}>
+        {t.hero.eyebrow}
+      </span>
+
+      <h1 class="hero-title reveal" data-i18n-id={id.hero.name} data-i18n-en={en.hero.name}>{t.hero.name}</h1>
+
+      <p class="tagline reveal" data-i18n-id={id.hero.tagline} data-i18n-en={en.hero.tagline}>{t.hero.tagline}</p>
+
+      <p class="intro reveal" data-i18n-id={id.hero.intro} data-i18n-en={en.hero.intro}>{t.hero.intro}</p>
+
+      <div class="hero-actions reveal">
+        <a href="#projects" class="btn btn-primary" data-i18n-id={id.hero.ctaPrimary} data-i18n-en={en.hero.ctaPrimary}>
+          {t.hero.ctaPrimary}
+        </a>
+        <a href="#contact" class="btn btn-ghost" data-i18n-id={id.hero.ctaSecondary} data-i18n-en={en.hero.ctaSecondary}>
+          {t.hero.ctaSecondary}
+        </a>
+      </div>
+    </div>
+
+    <StatStrip stats={t.hero.stats} enStats={en.hero.stats} />
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: min(46rem, 92vh);
+    display: flex;
+    align-items: center;
+    padding-block: var(--space-xl) var(--space-section);
+  }
+
+  .hero-cloud {
+    top: -1rem;
+    right: -3rem;
+    z-index: 0;
+  }
+
+  .hero-panel {
+    position: relative;
+    z-index: 1;
+    max-width: 38rem;
+    padding: var(--space-xl);
+  }
+
+  .hero-copy > .reveal:nth-child(2) {
+    transition-delay: 80ms;
+  }
+
+  .hero-copy > .reveal:nth-child(3) {
+    transition-delay: 160ms;
+  }
+
+  .hero-copy > .reveal:nth-child(4) {
+    transition-delay: 240ms;
+  }
+
+  .hero-copy > .reveal:nth-child(5) {
+    transition-delay: 320ms;
+  }
+
+  .hero-panel :global(.stat-strip) {
+    transition-delay: 400ms;
+  }
+
+  .hero-title {
+    font-size: clamp(2.75rem, 1.4rem + 6.5vw, 6rem);
+    line-height: 0.95;
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  .tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--text-h3);
+    color: var(--color-accent);
+    margin-bottom: var(--space-md);
+  }
+
+  .intro {
+    max-width: 30rem;
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    border-radius: 999px;
+    transition: transform var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    border: var(--rule-width) solid var(--glass-border);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .hero-panel :global(.stat-strip) {
+    margin-top: var(--space-xl);
+    margin-bottom: calc(-1 * var(--space-xl) - var(--space-md));
+  }
+
+  /* Large screens: fill the container with a two-column hero — text on the
+     left, stats as a right-hand rail — so wide viewports aren't left empty.
+     Auto-placement puts .hero-copy in column 1 and .stat-strip in column 2. */
+  @media (min-width: 1024px) {
+    .hero-panel {
+      max-width: none;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(16rem, 1fr);
+      column-gap: var(--space-xl);
+      align-items: start;
+    }
+
+    .hero-panel :global(.stat-strip) {
+      flex-direction: column;
+      margin: 0;
+    }
+  }
+
+  /* Tablet range: single column, but centre the panel so it doesn't float
+     against the left edge with empty space on the right. */
+  @media (min-width: 801px) and (max-width: 1023px) {
+    .hero-panel {
+      margin-inline: auto;
+    }
+  }
+
+  @media (max-width: 800px) {
+    .hero-panel {
+      max-width: 100%;
+      padding: var(--space-lg);
+    }
+
+    .hero-panel :global(.stat-strip) {
+      margin-bottom: 0;
+      margin-top: var(--space-lg);
+    }
+  }
+</style>

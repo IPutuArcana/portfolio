@@ -1,0 +1,363 @@
+---
+// A detailed CSS owl that perches on a card and flies to a card in whichever
+// section the user navigates to. Positioning is driven by src/scripts/owl.ts
+// via the --owl-x / --owl-y / --owl-dir custom properties.
+---
+
+<div id="owl" class="owl" aria-hidden="true" data-owl>
+  <div class="owl-hop">
+    <div class="owl-dir">
+      <div class="owl-3d">
+        <span class="tuft tuft-l"></span>
+        <span class="tuft tuft-r"></span>
+
+        <div class="owl-head">
+          <span class="disc"></span>
+          <span class="brow brow-l"></span>
+          <span class="brow brow-r"></span>
+          <span class="eye eye-l"><span class="iris"><span class="pupil"></span><span class="glint"></span></span></span>
+          <span class="eye eye-r"><span class="iris"><span class="pupil"></span><span class="glint"></span></span></span>
+          <span class="beak"></span>
+        </div>
+
+        <div class="owl-torso">
+          <span class="belly"></span>
+          <span class="wing wing-l"></span>
+          <span class="wing wing-r"></span>
+        </div>
+
+        <div class="owl-feet">
+          <span class="foot foot-l"></span>
+          <span class="foot foot-r"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .owl {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 92px;
+    height: 112px;
+    z-index: 15;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(var(--owl-x, 40px), var(--owl-y, 40px));
+    transition: transform 1.25s cubic-bezier(0.34, 1.08, 0.4, 1), opacity 0.6s ease;
+    will-change: transform;
+  }
+
+  .owl.is-ready {
+    opacity: 1;
+  }
+
+  .owl.no-anim {
+    transition: opacity 0.6s ease;
+  }
+
+  /* Vertical arc during a flight, layered on top of the position move. */
+  .owl-hop {
+    width: 100%;
+    height: 100%;
+  }
+
+  .owl.is-flying .owl-hop {
+    animation: owl-hop 1.25s ease-in-out;
+  }
+
+  /* Facing direction — flipped by --owl-dir when flying left. */
+  .owl-dir {
+    width: 100%;
+    height: 100%;
+    transform: scaleX(var(--owl-dir, 1));
+    transition: transform 0.35s ease;
+  }
+
+  .owl-3d {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    animation: owl-sway 5s ease-in-out infinite;
+  }
+
+  /* ---------- Head ---------- */
+  .owl-head {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    width: 84%;
+    height: 60%;
+    transform: translateX(-50%) translateZ(10px);
+    transform-style: preserve-3d;
+    animation: owl-turn 7s ease-in-out infinite;
+  }
+
+  /* Heart-shaped facial disc */
+  .disc {
+    position: absolute;
+    inset: 6% 4% 0 4%;
+    background: radial-gradient(circle at 50% 42%, oklch(97% 0.02 300 / 0.95) 0 46%, transparent 47%),
+      linear-gradient(in oklch, var(--color-accent), var(--color-accent-secondary));
+    border-radius: 46% 46% 50% 50% / 42% 42% 58% 58%;
+    box-shadow: inset 0 -6px 10px oklch(30% 0.1 300 / 0.25);
+  }
+
+  .brow {
+    position: absolute;
+    top: 30%;
+    width: 30%;
+    height: 8%;
+    background: var(--color-accent);
+    border-radius: 40%;
+    transform: translateZ(12px);
+  }
+
+  .brow-l {
+    left: 12%;
+    transform: translateZ(12px) rotate(12deg);
+  }
+
+  .brow-r {
+    right: 12%;
+    transform: translateZ(12px) rotate(-12deg);
+  }
+
+  .eye {
+    position: absolute;
+    top: 34%;
+    width: 32%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, oklch(99% 0.01 300) 0 62%, oklch(88% 0.03 300) 63% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateZ(14px);
+    box-shadow: 0 1px 3px oklch(30% 0.1 300 / 0.3);
+  }
+
+  .eye-l {
+    left: 10%;
+  }
+
+  .eye-r {
+    right: 10%;
+  }
+
+  .iris {
+    position: relative;
+    width: 62%;
+    height: 62%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 45%, var(--backdrop-blob-tertiary) 0 55%, oklch(55% 0.16 60) 56% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: owl-blink 6.5s ease-in-out infinite;
+  }
+
+  .pupil {
+    width: 52%;
+    height: 52%;
+    border-radius: 50%;
+    background: oklch(18% 0.03 300);
+  }
+
+  .glint {
+    position: absolute;
+    top: 20%;
+    left: 24%;
+    width: 22%;
+    height: 22%;
+    border-radius: 50%;
+    background: oklch(100% 0 0 / 0.9);
+  }
+
+  .beak {
+    position: absolute;
+    top: 58%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: translateX(-50%) translateZ(16px);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 15px solid var(--backdrop-blob-tertiary);
+    filter: drop-shadow(0 1px 1px oklch(30% 0.1 60 / 0.35));
+  }
+
+  /* Ear tufts */
+  .tuft {
+    position: absolute;
+    top: -2%;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 30px solid var(--color-accent);
+    transform: translateZ(-4px);
+  }
+
+  .tuft-l {
+    left: 16%;
+    transform: translateZ(-4px) rotate(-24deg);
+  }
+
+  .tuft-r {
+    right: 16%;
+    transform: translateZ(-4px) rotate(24deg);
+  }
+
+  /* ---------- Torso ---------- */
+  .owl-torso {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    width: 74%;
+    height: 56%;
+    transform: translateX(-50%);
+    background: linear-gradient(in oklch, var(--color-accent), var(--color-accent-secondary));
+    border-radius: 46% 46% 48% 48% / 40% 40% 60% 60%;
+    box-shadow: inset 0 -8px 12px oklch(30% 0.1 300 / 0.28);
+  }
+
+  .belly {
+    position: absolute;
+    inset: 14% 22% 6% 22%;
+    background: radial-gradient(circle at 50% 30%, oklch(96% 0.03 320 / 0.85) 0 40%, oklch(90% 0.05 320 / 0.6) 60% 100%);
+    border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+    /* Feather speckles */
+    box-shadow:
+      -6px 10px 0 -5px oklch(70% 0.08 320 / 0.5),
+      6px 10px 0 -5px oklch(70% 0.08 320 / 0.5),
+      0 18px 0 -5px oklch(70% 0.08 320 / 0.5),
+      -6px 26px 0 -5px oklch(70% 0.08 320 / 0.5),
+      6px 26px 0 -5px oklch(70% 0.08 320 / 0.5);
+  }
+
+  .wing {
+    position: absolute;
+    top: 6%;
+    width: 26%;
+    height: 84%;
+    background: linear-gradient(in oklch, var(--color-accent-secondary), var(--color-accent));
+    border-radius: 60% 40% 45% 55% / 70% 70% 30% 30%;
+    transform-origin: 50% 8%;
+    box-shadow: inset -2px 0 6px oklch(30% 0.1 300 / 0.3);
+  }
+
+  .wing-l {
+    left: -6%;
+    animation: owl-flap-l 3.6s ease-in-out infinite;
+  }
+
+  .wing-r {
+    right: -6%;
+    animation: owl-flap-r 3.6s ease-in-out infinite;
+  }
+
+  .owl.is-flying .wing-l {
+    animation-duration: 0.26s;
+  }
+
+  .owl.is-flying .wing-r {
+    animation-duration: 0.26s;
+  }
+
+  /* ---------- Feet ---------- */
+  .owl-feet {
+    position: absolute;
+    bottom: -2%;
+    left: 50%;
+    width: 46%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .foot {
+    width: 12px;
+    height: 12px;
+    background: var(--backdrop-blob-tertiary);
+    border-radius: 3px 3px 40% 40%;
+    box-shadow:
+      -4px 0 0 -3px var(--backdrop-blob-tertiary),
+      4px 0 0 -3px var(--backdrop-blob-tertiary);
+    position: relative;
+  }
+
+  /* ---------- Animations ---------- */
+  @keyframes owl-hop {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    45% {
+      transform: translateY(-48px);
+    }
+  }
+
+  @keyframes owl-sway {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-1.5deg);
+    }
+    50% {
+      transform: translateY(-3px) rotate(1.5deg);
+    }
+  }
+
+  @keyframes owl-turn {
+    0%,
+    100% {
+      transform: translateX(-50%) translateZ(10px) rotateY(-16deg);
+    }
+    50% {
+      transform: translateX(-50%) translateZ(10px) rotateY(16deg);
+    }
+  }
+
+  @keyframes owl-flap-l {
+    0%,
+    100% {
+      transform: rotateZ(4deg);
+    }
+    50% {
+      transform: rotateZ(-22deg);
+    }
+  }
+
+  @keyframes owl-flap-r {
+    0%,
+    100% {
+      transform: rotateZ(-4deg);
+    }
+    50% {
+      transform: rotateZ(22deg);
+    }
+  }
+
+  @keyframes owl-blink {
+    0%,
+    91%,
+    100% {
+      transform: scaleY(1);
+    }
+    95% {
+      transform: scaleY(0.08);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .owl {
+      width: 72px;
+      height: 88px;
+    }
+  }
+</style>
+
+<script src="../scripts/owl.ts"></script>

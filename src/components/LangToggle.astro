@@ -1,0 +1,115 @@
+---
+import type { SiteContent } from '../data/content';
+
+interface Props {
+  t: SiteContent;
+  currentLang: 'id' | 'en';
+}
+
+const { t } = Astro.props;
+---
+
+<button type="button" class="lang-toggle" data-lang-toggle aria-label={`Switch language: ${t.langToggle.label}`}>
+  <span data-lang-label>{t.langToggle.label}</span>
+</button>
+
+<style>
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding-inline: var(--space-sm);
+    border: var(--rule-width) solid var(--color-border);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    transition: border-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .lang-toggle:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+
+  .lang-toggle span {
+    display: inline-block;
+  }
+
+  .lang-toggle span.is-swapping {
+    animation: lang-swap var(--duration-slow) var(--ease-out-expo);
+  }
+
+  @keyframes lang-swap {
+    from {
+      opacity: 0;
+      filter: blur(6px);
+      transform: translateY(8px) scale(0.85);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0) scale(1);
+    }
+  }
+</style>
+
+<script>
+  import { applyLang, currentLang } from '../scripts/i18n';
+
+  // Delegate on document so the handler survives Astro ClientRouter
+  // navigations — per-element listeners would be lost after a page swap.
+  function render() {
+    const button = document.querySelector<HTMLButtonElement>('[data-lang-toggle]');
+    const label = button?.querySelector<HTMLElement>('[data-lang-label]');
+    if (!button || !label) return;
+    const text = currentLang() === 'id' ? 'EN' : 'ID';
+    label.textContent = text;
+    button.setAttribute('aria-label', `Switch language: ${text}`);
+  }
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest('[data-lang-toggle]');
+    if (!button) return;
+
+    const next = currentLang() === 'id' ? 'en' : 'id';
+    applyLang(next);
+    try {
+      localStorage.setItem('lang', next);
+    } catch (e) {}
+    render();
+
+    // Brief blur-fade over the page content so the text swap reads as a
+    // deliberate transition rather than an instant flip.
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      document.body.classList.remove('lang-changing');
+      // eslint-disable-next-line no-void
+      void document.body.offsetWidth;
+      document.body.classList.add('lang-changing');
+      window.setTimeout(() => document.body.classList.remove('lang-changing'), 900);
+    }
+
+    const label = button.querySelector<HTMLElement>('[data-lang-label]');
+    if (label) {
+      label.classList.remove('is-swapping');
+      // eslint-disable-next-line no-void
+      void label.offsetWidth;
+      label.classList.add('is-swapping');
+    }
+  });
+
+  // Re-apply the saved language to the freshly rendered content on every
+  // navigation, then keep the toggle label in sync.
+  document.addEventListener('astro:page-load', () => {
+    applyLang(currentLang());
+    render();
+  });
+
+  render();
+</script>

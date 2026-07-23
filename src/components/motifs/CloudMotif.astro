@@ -1,0 +1,36 @@
+---
+interface Props {
+  class?: string;
+  width?: number;
+  tone?: 'accent' | 'secondary';
+}
+
+const { class: className = '', width = 220, tone = 'secondary' } = Astro.props;
+const fill = tone === 'accent' ? 'var(--color-accent)' : 'var(--color-accent-secondary)';
+---
+
+<svg
+  class:list={['motif cloud-motif', className]}
+  width={width}
+  viewBox="0 0 220 120"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <g opacity="0.16" fill={fill}>
+    <circle cx="52" cy="70" r="34" />
+    <circle cx="92" cy="52" r="42" />
+    <circle cx="140" cy="66" r="36" />
+    <circle cx="176" cy="80" r="26" />
+    <rect x="40" y="70" width="150" height="30" rx="15" />
+  </g>
+  <g stroke="var(--color-accent)" stroke-width="1" opacity="0.5" fill="none">
+    <path d="M20 92c10-30 34-46 62-40 8-22 34-30 54-16 20-10 46 0 50 24 16 2 28 14 26 28" />
+  </g>
+</svg>
+
+<style>
+  .cloud-motif {
+    height: auto;
+  }
+</style>

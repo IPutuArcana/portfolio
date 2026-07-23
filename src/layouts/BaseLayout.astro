@@ -1,0 +1,76 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/fraunces/wght.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { content, type Lang } from '../data/content';
+import Backdrop from '../components/Backdrop.astro';
+import SocialRail from '../components/SocialRail.astro';
+import BackToTop from '../components/BackToTop.astro';
+import Owl from '../components/Owl.astro';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'id' } = Astro.props;
+const t = content[lang];
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title data-i18n-id={content.id.meta.title} data-i18n-en={content.en.meta.title}>{t.meta.title}</title>
+    <meta
+      name="description"
+      content={t.meta.description}
+      data-i18n-attr="content"
+      data-i18n-id={content.id.meta.description}
+      data-i18n-en={content.en.meta.description}
+    />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#e4dbf5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#150f22" media="(prefers-color-scheme: dark)" />
+
+    <ClientRouter />
+
+    <script is:inline>
+      (function () {
+        function restore() {
+          try {
+            var savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+              document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+            var savedLang = localStorage.getItem('lang');
+            if (savedLang === 'id' || savedLang === 'en') {
+              document.documentElement.setAttribute('lang', savedLang);
+            }
+          } catch (e) {}
+        }
+        restore();
+        // ClientRouter resets <html> attributes to the server-rendered
+        // values on every swap; restore theme + lang before the next paint.
+        document.addEventListener('astro:after-swap', restore);
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Backdrop transition:persist />
+    <SocialRail transition:persist />
+    <slot />
+    <Owl transition:persist />
+    <BackToTop transition:persist />
+    <script src="../scripts/reveal.ts"></script>
+  </body>
+</html>

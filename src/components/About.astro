@@ -1,0 +1,106 @@
+---
+import { Image } from 'astro:assets';
+import { content, type Lang } from '../data/content';
+import profile from '../assets/profile.jpeg';
+import OrnamentalFrame from './motifs/OrnamentalFrame.astro';
+import BlossomMotif from './motifs/BlossomMotif.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang];
+const en = content.en;
+const id = content.id;
+---
+
+<section class="section wrap" id="about">
+  <div class="about-grid">
+    <div class="about-portrait panel reveal">
+      <div class="portrait-frame">
+        <Image
+          src={profile}
+          alt={t.hero.name}
+          data-i18n-attr="alt"
+          data-i18n-id={id.hero.name}
+          data-i18n-en={en.hero.name}
+          width={220}
+          height={220}
+          loading="lazy"
+        />
+        <OrnamentalFrame />
+      </div>
+      <span class="eyebrow" data-i18n-id={id.about.eyebrow} data-i18n-en={en.about.eyebrow}>{t.about.eyebrow}</span>
+      <h2 data-i18n-id={id.about.heading} data-i18n-en={en.about.heading}>{t.about.heading}</h2>
+    </div>
+    <div class="about-copy panel reveal">
+      <BlossomMotif class="about-blossom" width={64} />
+      {t.about.paragraphs.map((p, i) => (
+        <p data-i18n-id={id.about.paragraphs[i]} data-i18n-en={en.about.paragraphs[i]}>{p}</p>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: var(--space-xl);
+  }
+
+  .about-portrait {
+    position: relative;
+    padding: var(--space-lg);
+  }
+
+  .portrait-frame {
+    position: relative;
+    width: 9rem;
+    aspect-ratio: 1;
+    margin-bottom: var(--space-md);
+    overflow: hidden;
+  }
+
+  .portrait-frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .about-grid h2 {
+    font-size: var(--text-h2);
+    margin-top: var(--space-xs);
+  }
+
+  .about-copy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 42rem;
+    padding: var(--space-lg);
+    overflow: hidden;
+  }
+
+  .about-blossom {
+    top: -0.5rem;
+    right: -0.5rem;
+    z-index: 0;
+  }
+
+  .about-copy p {
+    position: relative;
+    z-index: 1;
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+  }
+
+  @media (max-width: 800px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+  }
+</style>

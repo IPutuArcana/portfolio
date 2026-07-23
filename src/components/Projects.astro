@@ -1,0 +1,74 @@
+---
+import { content, type Lang } from '../data/content';
+import ProjectCard from './ProjectCard.astro';
+import BlossomMotif from './motifs/BlossomMotif.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang];
+const en = content.en;
+const id = content.id;
+---
+
+<section class="section wrap" id="projects">
+  <BlossomMotif class="projects-blossom" width={70} />
+  <div class="projects-head panel reveal">
+    <span class="eyebrow" data-i18n-id={id.projects.eyebrow} data-i18n-en={en.projects.eyebrow}>{t.projects.eyebrow}</span>
+    <h2 data-i18n-id={id.projects.heading} data-i18n-en={en.projects.heading}>{t.projects.heading}</h2>
+    <p class="note" data-i18n-id={id.projects.note} data-i18n-en={en.projects.note}>{t.projects.note}</p>
+  </div>
+
+  <div class="projects-grid">
+    {t.projects.items.map((project, i) => (
+      <ProjectCard
+        project={project}
+        enProject={en.projects.items[i]}
+        linkLabel={t.projects.linkLabel}
+        enLinkLabel={en.projects.linkLabel}
+        featured={i === 0}
+      />
+    ))}
+  </div>
+</section>
+
+<style>
+  #projects {
+    position: relative;
+  }
+
+  .projects-blossom {
+    top: 0.5rem;
+    right: 1rem;
+  }
+
+  .projects-head {
+    padding: var(--space-lg);
+  }
+
+  .projects-head h2 {
+    font-size: var(--text-h2);
+    margin-block: var(--space-xs) var(--space-sm);
+  }
+
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+  }
+
+  @media (max-width: 800px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

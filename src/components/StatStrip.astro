@@ -1,0 +1,118 @@
+---
+import type { StatEntry } from '../data/content';
+
+interface Props {
+  stats: StatEntry[];
+  enStats: StatEntry[];
+}
+
+const { stats, enStats } = Astro.props;
+---
+
+{(() => {
+  const parsed = stats.map((stat) => stat.value.match(/^(\d+)(.*)$/));
+  return (
+    <div class="stat-strip reveal">
+      {stats.map((stat, i) => {
+        const match = parsed[i];
+        return (
+          <div class:list={['stat', 'panel', i % 2 === 0 ? 'tint-a' : 'tint-b']}>
+            <span
+              class="stat-value"
+              data-i18n-id={stat.value}
+              data-i18n-en={enStats[i].value}
+              data-count-to={match ? match[1] : undefined}
+              data-suffix={match ? match[2] : undefined}
+            >{stat.value}</span>
+            <span class="stat-label" data-i18n-id={stat.label} data-i18n-en={enStats[i].label}>{stat.label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+})()}
+
+<style>
+  .stat-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 16px;
+  }
+
+  .tint-a {
+    background: color-mix(in oklch, var(--color-accent) 30%, var(--glass-bg));
+  }
+
+  .tint-b {
+    background: color-mix(in oklch, var(--color-accent-secondary) 30%, var(--glass-bg));
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+  }
+
+  .stat-label {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .stat-strip {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reducedMotion) {
+    const values = document.querySelectorAll<HTMLElement>('.stat-value[data-count-to]');
+
+    if (values.length > 0) {
+      const easeOutExpo = (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
+
+      const animate = (el: HTMLElement) => {
+        const target = Number(el.dataset.countTo);
+        const suffix = el.dataset.suffix ?? '';
+        const duration = 900;
+        const start = performance.now();
+
+        const tick = (now: number) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const current = Math.round(target * easeOutExpo(progress));
+          el.textContent = `${current}${suffix}`;
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+
+        requestAnimationFrame(tick);
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              animate(entry.target as HTMLElement);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.4 },
+      );
+
+      values.forEach((el) => observer.observe(el));
+    }
+  }
+</script>
