@@ -8,7 +8,6 @@ import { content, type Lang } from '../data/content';
 import Backdrop from '../components/Backdrop.astro';
 import SocialRail from '../components/SocialRail.astro';
 import BackToTop from '../components/BackToTop.astro';
-import Dragon from '../components/Dragon.astro';
 
 interface Props {
   lang?: Lang;
@@ -69,8 +68,8 @@ const t = content[lang];
     <Backdrop transition:persist />
     <SocialRail transition:persist />
     <slot />
-    <Dragon transition:persist />
     <BackToTop transition:persist />
     <script src="../scripts/reveal.ts"></script>
+    <script src="../scripts/deck.ts"></script>
   </body>
 </html>

@@ -224,3 +224,118 @@ body.lang-changing main {
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================================= *
+ * Presentation deck
+ *
+ * On the home page <main data-deck>, each section becomes a
+ * full-viewport slide that snaps into place. deck.ts marks the
+ * active slide `.is-current`, which replays a grand cinematic
+ * entrance for that slide's content every time it arrives.
+ * All of this is scoped behind [data-deck] / :has(main[data-deck])
+ * so the blog page keeps its ordinary scrolling layout.
+ * ============================================================= */
+
+html:has(main[data-deck]) {
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 0;
+}
+
+main[data-deck] > * {
+  min-height: 100dvh;
+  display: grid;
+  align-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  /* Deck slides read as distinct scenes, not a ruled document. */
+  border-top: none !important;
+  padding-block: clamp(6rem, 12vh, 9rem);
+  overflow: clip;
+}
+
+/* The mood of the backdrop shifts from slide to slide. */
+.backdrop {
+  transition: filter 1.4s var(--ease-out-expo),
+    background-color var(--duration-slow) var(--ease-out-expo);
+}
+
+html:has(main[data-deck]) .backdrop {
+  filter: hue-rotate(var(--deck-hue, 0deg));
+}
+
+/* Grand entrance. Only the active slide's content is shown; everything
+   else waits off-stage, so navigating back and forth replays the reveal. */
+@media (prefers-reduced-motion: no-preference) {
+  main[data-deck] .reveal,
+  main[data-deck] .project-card {
+    opacity: 0;
+    transform: translateY(64px) scale(0.94);
+    filter: blur(14px);
+    transition: opacity 0.95s var(--ease-out-expo),
+      transform 0.95s var(--ease-out-expo), filter 0.95s var(--ease-out-expo);
+    will-change: transform, opacity;
+  }
+
+  main[data-deck] .is-current .reveal,
+  main[data-deck] .is-current .project-card {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  /* Stagger the project cards as they fly in. */
+  main[data-deck] .is-current .projects-grid > .project-card:nth-child(2) {
+    transition-delay: 140ms;
+  }
+  main[data-deck] .is-current .projects-grid > .project-card:nth-child(3) {
+    transition-delay: 280ms;
+  }
+}
+
+/* Vertical slide rail — built by deck.ts, styled here. */
+.deck-rail {
+  position: fixed;
+  left: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  align-items: center;
+}
+
+.deck-rail button {
+  width: 11px;
+  height: 11px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--color-on-backdrop-muted);
+  opacity: 0.4;
+  transition: opacity var(--duration-normal) var(--ease-out-expo),
+    transform var(--duration-normal) var(--ease-out-expo),
+    background-color var(--duration-normal) var(--ease-out-expo);
+}
+
+.deck-rail button:hover {
+  opacity: 0.8;
+  transform: scale(1.25);
+}
+
+.deck-rail button[aria-current='true'] {
+  background: var(--color-accent);
+  opacity: 1;
+  transform: scale(1.5);
+  box-shadow: var(--glow-accent);
+}
+
+@media (max-width: 640px) {
+  .deck-rail {
+    left: 8px;
+    gap: 0.6rem;
+  }
+  .deck-rail button {
+    width: 9px;
+    height: 9px;
+  }
+}

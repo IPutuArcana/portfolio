@@ -8,7 +8,12 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matc
 function initReveals() {
   if (reducedMotion) return;
 
-  const targets = document.querySelectorAll<HTMLElement>('.reveal:not([data-revealed])');
+  // Skip anything inside the presentation deck — deck.ts owns those entrances,
+  // toggling `.is-current` per slide, and the two systems must not both drive
+  // the same `.reveal` elements.
+  const targets = Array.from(
+    document.querySelectorAll<HTMLElement>('.reveal:not([data-revealed])'),
+  ).filter((el) => !el.closest('[data-deck]'));
   if (targets.length === 0) return;
 
   targets.forEach((el) => el.setAttribute('data-revealed', 'false'));
